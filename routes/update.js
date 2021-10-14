@@ -3,7 +3,7 @@ var express = require('express');
 var router = express.Router();
 const ObjectId = require('mongodb').ObjectId;
 
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res) {
     const data = {
         data: {
             msg: "This page wants POST, not GET."
@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
     };
 
     try {
-        result = await update(filter, content);
+        var result = await update(filter, content);
 
         if (result) {
             return res.json({ data: result });

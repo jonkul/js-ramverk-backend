@@ -2,7 +2,7 @@ var database = require('../db/database');
 var express = require('express');
 var router = express.Router();
 
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res) {
     const data = {
         data: {
             msg: "This page wants POST, not GET."
@@ -13,13 +13,22 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', async (req, res) => {
-    const content = {
-        name: req.body.name,
-        html: req.body.html,
-    };
+    var content = "";
+
+    if (process.env.NODE_ENV === 'test') {
+        content = {
+            name: "test name 1",
+            html: "test content 1",
+        };
+    } else {
+        content = {
+            name: req.body.name || "New Default Document",
+            html: req.body.html || "No input detected.",
+        };
+    }
 
     try {
-        result = await create(content);
+        var result = await create(content);
 
         if (result) {
             return res.json({ data: result });

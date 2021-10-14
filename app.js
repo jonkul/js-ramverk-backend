@@ -16,6 +16,7 @@ const hello = require('./routes/hello');
 const update = require('./routes/update');
 const create = require('./routes/create');
 const list = require('./routes/list');
+const setup = require('./routes/setup');
 
 
 // don't show the log when it is test
@@ -40,6 +41,7 @@ app.use('/hello', hello); // /:msg
 app.use('/update', update);
 app.use('/create', create);
 app.use('/list', list);
+app.use('/setup', setup);
 
 
 // Add routes for 404 and error handling
@@ -68,7 +70,12 @@ app.use((err, req, res, next) => {
 });
 
 // Startup server and listen on port
-app.listen(port, () => {
-    console.log(`Server is listening on ${port}`);
-    /* console.log(`DSN is: ${dsn}`); */
-});
+//app.listen(port, () => {
+//    console.log(`Server is listening on ${port}`);
+//    /* console.log(`DSN is: ${dsn}`); */
+// });
+
+
+const server = app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+
+module.exports = server;
