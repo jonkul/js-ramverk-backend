@@ -9,3 +9,5 @@
 
 4. Routes
     Jag har valt att stoppa alla routes utom 404 och diverse felhanterare i externa routes-filer som importeras.
+
+https://app.travis-ci.com/jonkul/js-ramverk-backend.svg?branch=master
