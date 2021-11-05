@@ -23,7 +23,7 @@ router.post('/', async (req, res) => {
     } else {
         content = {
             name: req.body.name || "New Default Document",
-            html: req.body.html || "No input detected.",
+            html: req.body.html || "",
         };
     }
 

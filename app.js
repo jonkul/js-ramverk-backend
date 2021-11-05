@@ -18,6 +18,55 @@ const create = require('./routes/create');
 const list = require('./routes/list');
 const setup = require('./routes/setup');
 
+//socket.io
+const server = require('http').createServer(app);
+const io = require("socket.io")(server, {
+    cors: {
+        // origin: [ "http://localhost:3000", "https://www.student.bth.se"],
+        origin: 'https://www.student.bth.se',
+            'Access-Control-Allow-Origin': 'https://www.student.bth.se',
+        //origin: [ "*"],
+        methods: ["GET", "POST"]
+    }
+});
+
+
+io.on('connection', function (socket) {
+    console.info("User", socket.id, "connected");
+    let previousDoc = "";
+
+    socket.on('activeDoc', function (_id) {
+        if (previousDoc) {
+            socket.leave(previousDoc);
+            // io.in(socket.id).socketsLeave(previousDoc);
+            console.info(socket.id, "left room", previousDoc);
+        }
+        
+        socket.join(_id);
+        console.info(socket.id, "joined room", _id);
+        previousDoc = _id;
+        console.info(io.sockets.adapter.rooms);
+    });
+
+    socket.on('docBodyUpdate', function (active) {
+        socket.to(active._id).emit("docBodyUpdate", active);
+        console.info("Message emited!");
+        console.info(">>> socket id:", socket.id);
+        console.info(">>> active.id:", active._id);
+        console.info(">>> active.name:", active.name);
+        console.info(">>> active.html:", active.html);
+    });
+
+    socket.on("disconnecting", () => {
+        // console.log(socket.rooms); // the Set contains at least the socket ID
+    });
+
+    socket.on("disconnect", () => {
+        // socket.rooms.size === 0
+    });
+});
+
+
 
 // don't show the log when it is test
 if (process.env.NODE_ENV !== 'test') {
@@ -69,6 +118,8 @@ app.use((err, req, res, next) => {
     });
 });
 
+
+
 // Startup server and listen on port
 //app.listen(port, () => {
 //    console.log(`Server is listening on ${port}`);
@@ -76,6 +127,6 @@ app.use((err, req, res, next) => {
 // });
 
 
-const server = app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+const serv = server.listen(port, () => console.log(`Example app listening on port ${port}!`));
 
-module.exports = server;
+module.exports = serv;
